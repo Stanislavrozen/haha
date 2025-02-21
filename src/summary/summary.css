@@ -1,0 +1,16 @@
+.summary-row {
+    background-color: #ffffff;
+    box-shadow: 0px 0px 9px 0px rgba(0, 0, 0, 0.1);
+    font-family: lato, sans-serif;
+    font-size: 14px;
+    padding: 10px 15px;
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+}
+.clusters-block {
+    margin-top: 24px;
+
+    min-width: 250px;
+    padding: 5px;
+}

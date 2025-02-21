@@ -1,0 +1,24 @@
+window {
+  transition: all 5s;
+}
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+.main {
+  display: flex;
+}
+
+.left-pane {
+
+  padding: 8px 0;
+}
+.summary-block {
+  min-width: 208px;
+  display: flex;
+  flex-direction: column;
+}
+.content-area {
+  position: relative;
+}
