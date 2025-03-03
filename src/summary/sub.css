@@ -1,0 +1,94 @@
+.sub-menu {
+    display: none;
+    width: 800px;
+    height: auto;
+    font-family: "hh sans", "Helvetica Neue", sans-serif;
+}
+
+.sub-menu.active {
+    display: flex;
+    flex-direction: column;
+}
+
+.cluster-row {
+    display: flex;
+}
+
+.cluster-name {}
+
+.cluster-count {
+    width: auto;
+}
+
+@import url("https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700");
+
+*,
+*:before,
+*:after {
+    box-sizing: border-box;
+}
+
+body {
+    padding: 24px;
+    font-family: "Source Sans Pro", sans-serif;
+    margin: 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    margin: 0;
+}
+
+.container {
+    max-width: 1000px;
+    margin-right: auto;
+    margin-left: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(2px);
+    background-color: rgba(0, 0, 0, .5);
+    font-size: 15px;
+}
+
+.table {
+    width: 100%;
+    height: auto;
+    border: 1px solid #EEEEEE;
+}
+
+.table-header {
+    display: flex;
+    width: 100%;
+    background: #000;
+    padding: 18px 0;
+    align-items: center;
+}
+
+.table-row {
+    display: flex;
+    width: 100%;
+    padding: 18px 0;
+    justify-content: space-between;
+    color: #000;
+}
+
+.table-row:nth-of-type(odd) {
+    background: #EEEEEE;
+}
+
+.table-data,
+.header__item {
+    text-align: center;
+    width: auto;
+    padding-left: 24px;
+    padding-right: 24px;
+}
+
+.header__item {
+    text-transform: uppercase;
+}

@@ -1,0 +1,12 @@
+.chart-block {
+    font-size: 10px;
+    font-family: "hh sans", "Helvetica Neue", sans-serif;
+    border: none;
+    width: 100%;
+    height: 100%;
+    display: flex;
+}
+.chart-block path:nth-child(1) {
+    background-color: transparent;
+    fill:transparent;
+}

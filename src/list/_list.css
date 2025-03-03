@@ -1,4 +1,3 @@
-
 .scroll-block {
     top: 0;
     bottom: 0;
@@ -10,7 +9,10 @@
     scrollbar-width: thin;
     width: 100%;
     height: 100%;
+    padding-left: 325px;
+    padding-right: 25px;
 }
+
 .item-block * {
     font-family: "hh sans", "Helvetica Neue", sans-serif;
 }
@@ -19,6 +21,7 @@
     display: flex;
     flex-wrap: wrap;
     padding-top: 24px;
+    height: auto;
 }
 
 .item-block {
@@ -31,6 +34,7 @@
     margin-bottom: 24px;
     text-align: left;
     transition: all;
+    width: auto;
 }
 
 .item-block:hover {
@@ -55,6 +59,7 @@
     font-size: 20px;
     margin-bottom: 16px;
     gap: 8px;
+    width: auto;
 }
 
 .compensation {
@@ -69,6 +74,7 @@
     border-radius: 8px;
     color: #5e6c77;
     font-size: 14px;
+    width: auto;
 }
 
 .employer-block {
@@ -100,28 +106,47 @@
     background-repeat: no-repeat;
     height: 70px;
 }
+
 .trans1 {
     transition: 3s;
 }
+
 .trans3 {
     transition: 10s;
 }
+
 .trans5 {
     transition: 12s;
 }
+
 .trans7 {
     transition: 17s;
 }
+
 .trans9 {
     transition: 25s;
 }
+
 .item-block.blur {
     filter: blur(8px);
 }
+
 .item-block.greyscale {
     filter: grayscale(1);
 }
+
 .item-block.scale {
     transform: scale(1.3);
 }
 
+.scroll-left {
+    transform: rotateY(180deg);
+    overflow-y: scroll;
+    height: 150px;
+    width: 300px;
+    border: 1px solid #000;
+}
+
+.content {
+    transform: rotateY(180deg);
+}
