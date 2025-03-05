@@ -11,7 +11,7 @@ import Aside from './summary/aside';
 
 function App()
 {
-  const [ data, setData ] = useState(null)
+  const [ data, setData ] = useState(null);
   const [ landed, setLanded ] = useState([]);
   const all = []
   const limit = 2000;
@@ -20,7 +20,7 @@ function App()
   function getSource(url)
   {
     let repeatTimes = 20;
-    let pause = 1000;
+    let pause = 5000;
 
     return new Promise((resolve, reject) =>
     {
@@ -30,16 +30,20 @@ function App()
         {
           if (!json.errors) 
           {
-            json.url = url
+            if (json.items.length && json.items[ 0 ].id)
+            {
+              setAll(json.items)
+            }
             resolve(json)
           }
           else
           {
-            throw new Error(JSON.stringify(json))
+            throw new Error(json)
           }
         }).catch((error) =>
         {
-          if (--repeatTimes <= 0) 
+          console.log(error, repeatTimes)
+          if (repeatTimes <= 0) 
           {
             reject(error)
           }
@@ -48,147 +52,79 @@ function App()
             setTimeout(() =>
             {
               beg(url)
+              repeatTimes = repeatTimes - 1
+              pause = pause + 2000
+              console.log(repeatTimes, pause)
 
-            }, pause += 200)
+            }, pause)
           }
         })
       }
+      console.log(pause)
       beg(url)
     })
   }
 
-  function createUrls(count, baseUrl)
-  {
-    const url = new URL(baseUrl)
-    const urlCount = count > limit ? Math.ceil(limit / per_page) : Math.ceil(count / per_page);
-    // url.searchParams.set("clusters", "false");
-    url.searchParams.set("per_page", per_page);
-    return new Array(urlCount).fill(url).map((url, idx) =>
-    {
-      url.searchParams.set("page", idx);
-      return url.toString()
-    })
-  }
-
-  // async function getVacancies()
-  // {
-  //   const items = [];
-  //   for (let i = 0; i < data.urls.length; i++)
-  //   {
-  //     const vacancies = await getSource(data.urls[ i ])
-  //     items.push(...vacancies.items)
-  //     setData({ ...data, items })
-  //   }
-  // }
-
   async function searchVacancies(text)
   {
-    const url = `https://api.hh.ru/vacancies/?text=${text}&clusters=true&per_page=100&page=0`
+    const url = `https://api.hh.ru/vacancies/?clusters=true&per_page=100&text=${text}`
 
-    const data = await getSource(url)
-    setData(data)
-    await getVacancies(data)
-    await getRestTree(data)
-
-    console.log(data)
-  }
-
-  async function getVacancies(data)
-  {
-    const dataClone = { ...data }
-    dataClone.urls = createUrls(dataClone.found, dataClone.url)
-
-    for (let i = 1; i < dataClone.urls.length; i++)
-    {
-      data.items.push(...await getSource(dataClone.urls[ i ]).then(page => page.items));
-      setAll([...data.items])
-      setLanded([ ...all ])
-      setData({ ...dataClone })
-    }
-
-    console.log(landed)
-  }
-
-  function getClusterVacancies(cluster)
-  {
+    const initial = await getSource(url)
+    initial.url = url
+    setData(initial)
+    await getTree(initial)
   }
 
   function setAll(arr)
   {
     for (let i = 0; i < arr.length; i++)
     {
-      if(!all.find(a => a.id === arr[i].id))
+      if (!all.find(a => a.id === arr[ i ].id))
       {
-        all.push(arr[i])
+        all.push(arr[ i ])
       }
     }
+    console.log(all)
+    setLanded([ ...all ])
   }
-  async function getRestTree(data)
+  async function getTree(node)
   {
-    const dataClone = { ...data };
+    node.urls = new Array(node.pages).fill(node.url).map((url, idx) => url + "&page=" + idx)
 
-    for (let ci = 0; ci < dataClone.clusters.length; ci++)
+    for (let i = node.page + 1; i < node.pages; i++)
     {
-      const cluster = dataClone.clusters[ ci ]
-
-      for (let i = 0; i < cluster.items.length; i++)
-      {
-        const urls = createUrls(cluster.items[ i ].count, cluster.items[ i ].url);
-        const clusterData = await getSource(urls[ 0 ])
-
-
-        setAll([...clusterData.items])
-        setLanded([ ...all ])
-
-
-        cluster.items[ i ] = { ...cluster.items[ i ], ...clusterData }
-
-        // console.error(dataClone)
-        setData({ ...dataClone })
-
-        for (let ui = 1; ui < urls.length; ui++)
-        {
-          const clusterData = await getSource(urls[ ui ]);
-          cluster.items[ i ].items.push(...clusterData.items)
-          // console.error(dataClone)
-          setData({ ...dataClone })
-        }
-      }
-      // for (let li = 0; li < cluster.items.length; li++)
-      // { 
-      //   const item = cluster.items[ li ];
-
-      //   const pagingUrls = createUrls(item.count, item.url);
-      //   const clusterData = await getSource(pagingUrls[ 0 ]).then(page => page)
-      //   cluster = {...cluster, ...clusterData}
-
-      //   getClustersTree(clusterData)
-
-      //   clusterItem.data = { ...clusterData };
-      //   const clusterVacancies = [ ...clusterData.items ]
-
-      //   clusterItem.pagingUrls = pagingUrls;
-
-      //   for (let ui = 1; ui < pagingUrls.length; ui++)
-      //   {
-      //     clusterVacancies.push(await getSource(pagingUrls[ ui ]).then(page => page.items))
-      //     clusterItem.data.items = clusterVacancies
-      //     setData({ ...data, clusters })
-      //   }
-      // }
+      await node.items.push(...(await getSource(node.urls[ i ])).items)
     }
-  }
 
+    if (node.found && node.found > node.items.length)
+    {
+      for (let ci = 0; ci < node.clusters.length; ci++)
+      {
+
+        const cluster = node.clusters[ ci ] // Area
+
+        for (let ii = 0; ii < cluster.items.length; ii++)
+        {
+          cluster.items[ ii ] = { ...cluster.items[ ii ], ...await getSource(cluster.items[ ii ].url + "&page=0") } // Moscow
+          getTree(cluster.items[ ii ])
+        }
+        console.log(cluster)
+      }
+    }
+    console.log(node)
+  }
   return (
     <div className="App">
       {
         <div className='main'>
           <div className='content-area'>
             <div className='scroll-block'>
-              {data ? <List data={data} /> : null}
+              {
+                landed.length ? <List landed={landed} setLanded={setLanded} /> : null
+              }
             </div>
             <Searchline all={all} landed={landed} data={data} searchVacancies={searchVacancies} />
-            <Aside data={data} setData={setData} />
+            {/* <Aside data={data} setData={setData} /> */}
           </div>
         </div>
       }

@@ -2,38 +2,63 @@ import React, { useEffect, useRef } from 'react'
 import './_list.css'
 import Item from './item'
 
-const List = ({ data }) =>
+const List = ({ landed, setLanded }) =>
 {
     useEffect(() =>
     {
-        let distanceToScroll = document.body.scrollHeight - window.innerHeight;
-        var speed = 5;
-        console.log(distanceToScroll)
+        // const elem = document.querySelector(".items-block")
+        // let distanceToScroll = elem.scrollHeight - window.document.body.scrollHeight;
+        // var speed = 1;
 
-        const timer = setInterval(function ()
-        {
-            window.scrollBy(0, speed);
+        // const timer = setInterval(function ()
+        // {
+        //     elem.parentNode.scrollBy(0, speed);
 
-            if (window.scrollY >= distanceToScroll)
-            {
-                clearInterval(timer);
-            }
-        }, 16);
+        //     if (distanceToScroll <= 0)
+        //     {
+        //         clearInterval(timer);
+        //     }
+        // }, 16);
 
-        return () => clearInterval(timer)
+        // return () => clearInterval(timer)
 
     }, [])
+
+    function setAside(vacancy)
+    {
+        setLanded(landed.map(v =>
+        {
+            if (v.id == vacancy.id)
+            {
+                if (vacancy.aside == true)
+                {
+                    console.log(vacancy == v)
+                    console.log(v)
+                    v.aside = false
+                }
+                else
+                {
+                    v.aside = true
+                }
+
+            }
+            else
+            {
+                v.aside = false
+            }
+            return v;
+        }))
+    }
 
     return (
         <div className="items-block">
             {
-                data && data.items.length ?
-                    data.items.map((i, idx) =>
-                    {
-                        return (
-                            <Item key={i.id} count={idx} item={i} />
-                        )
-                    }) : null
+                landed.map((i, idx) =>
+                {
+                    return (
+                        <Item setAside={setAside} key={i.id} count={idx} item={i} />
+                    )
+                })
             }
         </div>
     )

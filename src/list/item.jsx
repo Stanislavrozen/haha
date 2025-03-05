@@ -1,9 +1,17 @@
 import React, { useEffect, useRef } from 'react'
 
-const Item = ({ count, item }) =>
+const Item = ({ count, item, setAside }) =>
 {
     const bg = item.employer.logo_urls ? item.employer.logo_urls[ 240 ] : null;
     const ref = useRef(null)
+
+    if(~item.requirement.indexOf("<highlighttext>"))
+    {
+        const value = item.requirement.match(/<(.+?:)?address>(.*?)<\/\1address>/igs)
+        console.log(value)
+    }
+
+
 
     // useEffect(() => {
     //     const elem = ref.current;
@@ -18,16 +26,16 @@ const Item = ({ count, item }) =>
     //     if(chance > 5)
     //     {
     //         timer = setInterval(() => {
-    
+
     //             elem.classList.contains(effect) ? elem.classList.remove(effect) : elem.classList.add(effect);
-    
+
     //         }, 2000);
     //     }
-        
+
     //     return () => clearInterval(timer)
     // }, [])
     return (
-        <div ref={ref} className='item-block'>
+        <div ref={ref} className={item.aside ? 'item-block aside' : 'item-block'} onClick={(e => setAside(item))}>
             <div className='title'>{item.name}</div>
             <div className='compensations'>
                 <div className='compensation'>{item.experience.name}</div>
@@ -41,6 +49,14 @@ const Item = ({ count, item }) =>
                     <div className='employer-city'>{item.area.name}</div>
                 </div>
                 <div className='employer-logo' style={{ backgroundImage: `url(${bg})` }}>
+                </div>
+            </div>
+            <div className='snippet-block'>
+                <div className='requirement'>
+                    {item.snippet.requirement}
+                </div>
+                <div className='responsibility'>
+                    {item.snippet.responsibility}
                 </div>
             </div>
         </div >
