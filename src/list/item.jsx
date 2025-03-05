@@ -3,14 +3,16 @@ import React, { useEffect, useRef } from 'react'
 const Item = ({ count, item, setAside }) =>
 {
     const bg = item.employer.logo_urls ? item.employer.logo_urls[ 240 ] : null;
-    const ref = useRef(null)
 
-    if(~item.requirement.indexOf("<highlighttext>"))
+    const requirement = useRef(null)
+    const responsibility = useRef(null)
+
+    useEffect(() =>
     {
-        const value = item.requirement.match(/<(.+?:)?address>(.*?)<\/\1address>/igs)
-        console.log(value)
-    }
+        requirement.current.insertAdjacentHTML('afterbegin', item.snippet.requirement)
+        responsibility.current.insertAdjacentHTML('afterbegin', item.snippet.responsibility)
 
+    }, [])
 
 
     // useEffect(() => {
@@ -35,7 +37,7 @@ const Item = ({ count, item, setAside }) =>
     //     return () => clearInterval(timer)
     // }, [])
     return (
-        <div ref={ref} className={item.aside ? 'item-block aside' : 'item-block'} onClick={(e => setAside(item))}>
+        <div className={item.aside ? 'item-block aside' : 'item-block'} onClick={(e => setAside(item))}>
             <div className='title'>{item.name}</div>
             <div className='compensations'>
                 <div className='compensation'>{item.experience.name}</div>
@@ -52,11 +54,9 @@ const Item = ({ count, item, setAside }) =>
                 </div>
             </div>
             <div className='snippet-block'>
-                <div className='requirement'>
-                    {item.snippet.requirement}
+                <div ref={requirement} className='requirement'>
                 </div>
-                <div className='responsibility'>
-                    {item.snippet.responsibility}
+                <div ref={responsibility} className='responsibility'>
                 </div>
             </div>
         </div >

@@ -30,6 +30,7 @@ function App()
         {
           if (!json.errors) 
           {
+          
             if (json.items.length && json.items[ 0 ].id)
             {
               setAll(json.items)
@@ -106,7 +107,7 @@ function App()
         for (let ii = 0; ii < cluster.items.length; ii++)
         {
           cluster.items[ ii ] = { ...cluster.items[ ii ], ...await getSource(cluster.items[ ii ].url + "&page=0") } // Moscow
-          getTree(cluster.items[ ii ])
+          // getTree(cluster.items[ ii ])
         }
         console.log(cluster)
       }

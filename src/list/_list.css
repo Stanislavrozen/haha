@@ -163,11 +163,14 @@
     left: 25px;
     height: auto;
     top: 209px;
-    width: 250px;
+    width: 275px;
 }
 .snippet-block {
     display: none;
 }
 .item-block.aside .snippet-block {
     display:block;
+}
+highlighttext {
+    background-color: yellow;
 }
